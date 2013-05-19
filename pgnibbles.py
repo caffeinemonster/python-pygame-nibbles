@@ -7,9 +7,6 @@ WINDOWHEIGHT = 480
 CELLSIZE = 10
 CELLWIDTH = int(WINDOWWIDTH / CELLSIZE)
 CELLHEIGHT = int(WINDOWHEIGHT / CELLSIZE)
-BGCOLOR = (0, 0, 0)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
 def main():
     global MAINCLOCK, MAINSURF, BASICFONT
     pygame.init()
@@ -58,7 +55,7 @@ def gameLoop():
             snakeCoords.insert(0, (snakeCoords[0][0] - 1, snakeCoords[0][1]))
         elif direction == K_RIGHT:
             snakeCoords.insert(0, (snakeCoords[0][0] + 1, snakeCoords[0][1]))
-        MAINSURF.fill(BGCOLOR)
+        MAINSURF.fill((0,0,0))
         drawSnake(snakeCoords)
         drawApple(apple)
         pygame.display.update()
