@@ -67,10 +67,10 @@ def drawSnake(snakeCoords):
     for coord in snakeCoords:
         x = coord[0] * CELLSIZE
         y = coord[1] * CELLSIZE
-	pygame.draw.circle(MAINSURF, GREEN, (x+(CELLSIZE/2),y+(CELLSIZE/2)), CELLSIZE/2, 2)
+	pygame.draw.circle(MAINSURF, (0, 255, 0), (x+(CELLSIZE/2),y+(CELLSIZE/2)), CELLSIZE/2, 2)
 def drawApple(coord):
     x = coord[0] * CELLSIZE
     y = coord[1] * CELLSIZE
-    pygame.draw.circle(MAINSURF, RED, (x+(CELLSIZE/2),y+(CELLSIZE/2)), CELLSIZE/2, 2)
+    pygame.draw.circle(MAINSURF, (255, 0, 0), (x+(CELLSIZE/2),y+(CELLSIZE/2)), CELLSIZE/2, 2)
 if __name__ == '__main__':
     main()
