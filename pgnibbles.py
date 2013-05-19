@@ -10,10 +10,6 @@ CELLHEIGHT = int(WINDOWHEIGHT / CELLSIZE)
 BGCOLOR = (0, 0, 0)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
-UP = 1
-DOWN = 2
-LEFT = 3
-RIGHT = 4
 def main():
     global MAINCLOCK, MAINSURF, BASICFONT
     pygame.init()
@@ -28,21 +24,21 @@ def gameLoop():
     startx = random.randint(5, CELLWIDTH - 6)
     starty = random.randint(5, CELLHEIGHT - 6)
     snakeCoords = [(startx, starty), (startx-1, starty)]
-    direction = RIGHT
+    direction = K_RIGHT
     apple = (random.randint(0, CELLWIDTH - 1), random.randint(0, CELLHEIGHT - 1))
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
                 stop()
             elif event.type == KEYDOWN:
-                if (event.key == K_LEFT or event.key == K_a) and direction != RIGHT:
-                    direction = LEFT
-                if (event.key == K_RIGHT or event.key == K_d) and direction != LEFT:
-                    direction = RIGHT
-                if (event.key == K_UP or event.key == K_w) and direction != DOWN:
-                    direction = UP
-                if (event.key == K_DOWN or event.key == K_s) and direction != UP:
-                    direction = DOWN
+                if (event.key == K_LEFT or event.key == K_a) and direction != K_RIGHT:
+                    direction = K_LEFT
+                if (event.key == K_RIGHT or event.key == K_d) and direction != K_LEFT:
+                    direction = K_RIGHT
+                if (event.key == K_UP or event.key == K_w) and direction != K_DOWN:
+                    direction = K_UP
+                if (event.key == K_DOWN or event.key == K_s) and direction != K_UP:
+                    direction = K_DOWN
                 if event.key == K_ESCAPE:
                     stop()
         if snakeCoords[0][0] == -1 or snakeCoords[0][0] == CELLWIDTH or snakeCoords[0][1] == -1 or snakeCoords[0][1] == CELLHEIGHT:
@@ -54,13 +50,13 @@ def gameLoop():
             apple = (random.randint(0, CELLWIDTH - 1), random.randint(0, CELLHEIGHT - 1))
         else:
             snakeCoords.pop()
-        if direction == UP:
+        if direction == K_UP:
             snakeCoords.insert(0, (snakeCoords[0][0], snakeCoords[0][1] - 1))
-        elif direction == DOWN:
+        elif direction == K_DOWN:
             snakeCoords.insert(0, (snakeCoords[0][0], snakeCoords[0][1] + 1))
-        elif direction == LEFT:
+        elif direction == K_LEFT:
             snakeCoords.insert(0, (snakeCoords[0][0] - 1, snakeCoords[0][1]))
-        elif direction == RIGHT:
+        elif direction == K_RIGHT:
             snakeCoords.insert(0, (snakeCoords[0][0] + 1, snakeCoords[0][1]))
         MAINSURF.fill(BGCOLOR)
         drawSnake(snakeCoords)
