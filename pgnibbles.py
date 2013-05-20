@@ -1,16 +1,17 @@
 #pygame most minimal nibbles - still removing code - any suggestions welcome.
 import random, time, pygame
 from pygame.locals import *
-WINDOWWIDTH = 640
-WINDOWHEIGHT = 480
-GRIDSIZE = 10
-GRIDWIDTH = int(WINDOWWIDTH / GRIDSIZE)
-GRIDHEIGHT = int(WINDOWHEIGHT / GRIDSIZE)
+wWIDTH = 640
+wHEIGHT = 480
+GSIZE = 10
+GRIDWIDTH = int(wWIDTH / GSIZE)
+GRIDHEIGHT = int(wHEIGHT / GSIZE)
+
 def main():
-    global MAINCLOCK, MAINSURF, BASICFONT
+    global GCLOCK, GSURF, BASICFONT
     pygame.init()
-    MAINCLOCK = pygame.time.Clock()
-    MAINSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
+    GCLOCK = pygame.time.Clock()
+    GSURF = pygame.display.set_mode((wWIDTH, wHEIGHT))
     while True:
         gameLoop()
 def stop():
@@ -54,19 +55,11 @@ def gameLoop():
             snakeCoords.insert(0, (snakeCoords[0][0] - 1, snakeCoords[0][1]))
         elif direction == K_RIGHT:
             snakeCoords.insert(0, (snakeCoords[0][0] + 1, snakeCoords[0][1]))
-        MAINSURF.fill((0,0,0))
-        drawSnake(snakeCoords)
-        drawApple(apple)
+        GSURF.fill((0,0,0))
+	for co in snakeCoords:
+            pygame.draw.circle(GSURF, (0, 255, 0), (co[0]*GSIZE+(GSIZE/2),co[1]*GSIZE+(GSIZE/2)), GSIZE/2, 2)
+        pygame.draw.circle(GSURF, (255, 0, 0), (apple[0]*GSIZE+(GSIZE/2),apple[1]*GSIZE+(GSIZE/2)), GSIZE/2, 2)
         pygame.display.update()
-        MAINCLOCK.tick(15)
-def drawSnake(snakeCoords):
-    for coord in snakeCoords:
-        x = coord[0] * GRIDSIZE
-        y = coord[1] * GRIDSIZE
-	pygame.draw.circle(MAINSURF, (0, 255, 0), (x+(GRIDSIZE/2),y+(GRIDSIZE/2)), GRIDSIZE/2, 2)
-def drawApple(coord):
-    x = coord[0] * GRIDSIZE
-    y = coord[1] * GRIDSIZE
-    pygame.draw.circle(MAINSURF, (255, 0, 0), (x+(GRIDSIZE/2),y+(GRIDSIZE/2)), GRIDSIZE/2, 2)
+        GCLOCK.tick(15)
 if __name__ == '__main__':
     main()
