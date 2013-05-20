@@ -1,4 +1,4 @@
-// pygame most minimal nibbles - still removing code - any suggestions welcome.
+#pygame most minimal nibbles - still removing code - any suggestions welcome.
 import random, time, pygame
 from pygame.locals import *
 WINDOWWIDTH = 640
@@ -27,7 +27,7 @@ def gameLoop():
             if event.type == QUIT:
                 stop()
             elif event.type == KEYDOWN:
-                if (event.key == K_LEFT or event.key == K_a) and direction != K_RIGHT:
+                if ((event.key == K_LEFT or event.key == K_a) and direction != K_RIGHT):
                     direction = K_LEFT
                 if (event.key == K_RIGHT or event.key == K_d) and direction != K_LEFT:
                     direction = K_RIGHT
