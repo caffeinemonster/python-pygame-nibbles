@@ -1,12 +1,11 @@
-import random
-import time
-import pygame
+// pygame most minimal nibbles - still removing code - any suggestions welcome.
+import random, time, pygame
 from pygame.locals import *
 WINDOWWIDTH = 640
 WINDOWHEIGHT = 480
-CELLSIZE = 10
-CELLWIDTH = int(WINDOWWIDTH / CELLSIZE)
-CELLHEIGHT = int(WINDOWHEIGHT / CELLSIZE)
+GRIDSIZE = 10
+GRIDWIDTH = int(WINDOWWIDTH / GRIDSIZE)
+GRIDHEIGHT = int(WINDOWHEIGHT / GRIDSIZE)
 def main():
     global MAINCLOCK, MAINSURF, BASICFONT
     pygame.init()
@@ -18,11 +17,11 @@ def stop():
     pygame.quit()
     quit()
 def gameLoop():
-    startx = random.randint(5, CELLWIDTH - 6)
-    starty = random.randint(5, CELLHEIGHT - 6)
+    startx = random.randint(5, GRIDWIDTH - 6)
+    starty = random.randint(5, GRIDHEIGHT - 6)
     snakeCoords = [(startx, starty), (startx-1, starty)]
     direction = K_RIGHT
-    apple = (random.randint(0, CELLWIDTH - 1), random.randint(0, CELLHEIGHT - 1))
+    apple = (random.randint(0, GRIDWIDTH - 1), random.randint(0, GRIDHEIGHT - 1))
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -38,13 +37,13 @@ def gameLoop():
                     direction = K_DOWN
                 if event.key == K_ESCAPE:
                     stop()
-        if snakeCoords[0][0] == -1 or snakeCoords[0][0] == CELLWIDTH or snakeCoords[0][1] == -1 or snakeCoords[0][1] == CELLHEIGHT:
+        if snakeCoords[0][0] == -1 or snakeCoords[0][0] == GRIDWIDTH or snakeCoords[0][1] == -1 or snakeCoords[0][1] == GRIDHEIGHT:
             return
         for snakeBody in snakeCoords[1:]:
             if (snakeCoords[0][0], snakeCoords[0][1]) == snakeBody:
                 return
         if snakeCoords[0][0] == apple[0] and snakeCoords[0][1] == apple[1]:
-            apple = (random.randint(0, CELLWIDTH - 1), random.randint(0, CELLHEIGHT - 1))
+            apple = (random.randint(0, GRIDWIDTH - 1), random.randint(0, GRIDHEIGHT - 1))
         else:
             snakeCoords.pop()
         if direction == K_UP:
@@ -62,12 +61,12 @@ def gameLoop():
         MAINCLOCK.tick(15)
 def drawSnake(snakeCoords):
     for coord in snakeCoords:
-        x = coord[0] * CELLSIZE
-        y = coord[1] * CELLSIZE
-	pygame.draw.circle(MAINSURF, (0, 255, 0), (x+(CELLSIZE/2),y+(CELLSIZE/2)), CELLSIZE/2, 2)
+        x = coord[0] * GRIDSIZE
+        y = coord[1] * GRIDSIZE
+	pygame.draw.circle(MAINSURF, (0, 255, 0), (x+(GRIDSIZE/2),y+(GRIDSIZE/2)), GRIDSIZE/2, 2)
 def drawApple(coord):
-    x = coord[0] * CELLSIZE
-    y = coord[1] * CELLSIZE
-    pygame.draw.circle(MAINSURF, (255, 0, 0), (x+(CELLSIZE/2),y+(CELLSIZE/2)), CELLSIZE/2, 2)
+    x = coord[0] * GRIDSIZE
+    y = coord[1] * GRIDSIZE
+    pygame.draw.circle(MAINSURF, (255, 0, 0), (x+(GRIDSIZE/2),y+(GRIDSIZE/2)), GRIDSIZE/2, 2)
 if __name__ == '__main__':
     main()
