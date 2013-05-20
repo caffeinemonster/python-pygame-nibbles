@@ -1,3 +1,4 @@
+#body / head collision still not working needs looking at.
 import random, pygame, time
 from pygame.locals import *
 wWIDTH = 640
@@ -5,7 +6,6 @@ wHEIGHT = 480
 GSIZE = 10
 GWIDTH=int(wWIDTH / GSIZE)
 GHEIGHT=int(wHEIGHT / GSIZE)
-
 class csnake():
     def __init__(self):
 	direction = 0
@@ -13,7 +13,8 @@ class csnake():
     def add (self, x, y):
 	self.data.insert(0,(x,y))
     def head(self):
-	return (self.data[0][0] , self.data[0][1])
+	r = self.data[0]
+	return r
     def body(self):
 	r = self.data
 	return r
@@ -28,8 +29,7 @@ class capple():
     def get(self):
 	r = self.data
 	return r
-
-while (1):#init 
+while (1):
     global GCLOCK, GSURF, BASICFONT
     pygame.init()
     GCLOCK = pygame.time.Clock()
@@ -41,14 +41,9 @@ while (1):#init
     sy = random.randint(5, GHEIGHT - 6)
     snake.add(sx,sy)
     snake.add(sx-1,sy)
-    snake.add(sx-2,sy)
-    snake.add(sx-3,sy)
-    print snake.data[0][0]
-    print snake.data[0][1]
+    #snake.add(sx-2,sy)
+    #snake.add(sx-3,sy)
     apple.add(random.randint(0, GWIDTH - 1),random.randint(0, GHEIGHT - 1))
-    print apple.data[0][0]
-    print apple.data[0][1]
-    #(random.randint(0, GRIDWIDTH - 1), random.randint(0, GRIDHEIGHT - 1))
     while(1): #start game
         print snake.direction
 	for event in pygame.event.get():
@@ -71,24 +66,23 @@ while (1):#init
         if snake.data[0][0] == -1 or snake.data[0][0] == GWIDTH or snake.data[0][1] == -1 or snake.data[0][1] == GHEIGHT:
             break
         sbody = snake.body()
-        for body in sbody:
-	    if body == snake.head():
-		break
-	#	print "===== uhoh"
-	#    else:
-	#	print "====== ok"
-	#for body in sbody:
-        #    if (snake.data[0][0] == body[0]) and (snake.data[0][1] == body[1]):
-        #        print "head intersectiong body"
-	#	print str(body[0]) +" " +str(body[1]) + " body : head " + str(snake.data[0][1]) + "," + str(snake.data[0][1])
-	#	quit()
-		#return
+	shead = snake.head()
+	#del sbody[0]
+        #ishead = 1
+	print sbody
+	print shead
+	print "========================"
+	for body in sbody[1:]:
+	    print body
+	    print shead
+	    print "==========="
+	    if (body == shead):
+	        quit()
 	if snake.data[0][0] == apple.data[0][0] and snake.data[0][1] == apple.data[0][1]:
             apple.add(random.randint(0, GWIDTH - 1),random.randint(0, GHEIGHT - 1))
-	    #apple = (random.randint(0, GRIDWIDTH - 1), random.randint(0, GRIDHEIGHT - 1))
         else:
-            #snakeCoords.pop()
 	    snake.remove()
+
 	if snake.direction == K_UP:
             snake.add(snake.data[0][0], snake.data[0][1] - 1)
         elif snake.direction == K_DOWN:
@@ -104,6 +98,3 @@ while (1):#init
         pygame.draw.circle(GSURF, (255, 0, 0), (apple.data[0][0]*GSIZE+(GSIZE/2),apple.data[0][1]*GSIZE+(GSIZE/2)), GSIZE/2, 2)
         pygame.display.update()
         GCLOCK.tick(15)
-
-#print snake.head()
-#print snake.body()
