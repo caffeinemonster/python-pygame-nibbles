@@ -9,35 +9,47 @@ GWIDTH = int(wWIDTH / GSIZE)
 GHEIGHT = int(wHEIGHT / GSIZE)
 class csnake():
     def __init__(self):
-        direction = 0
+        self.direction = 0
         self.data = []
         self.alive = 1
+
     def add (self, x, y):
         self.data.insert(0, (x, y))
+
     def head(self):
         r = self.data[0]
         return r
+
     def body(self):
         r = self.data
         return r
+
     def remove(self):
         self.data.pop()
+
+
 class capple():
     def __init__(self):
         self.data = []
+
     def add(self, x, y):
         self.data = []
         self.data.append((x, y))
+
+
 class cscore():
     def __init__(self):
-        self.score=0
+        self.score = 0
+
     def add(self, s):
         self.score = self.score + s
-pygame.display.set_caption("pgnibbles")
+
+
 while (1):
     pygame.init()
     GCLOCK = pygame.time.Clock()
     GSURF = pygame.display.set_mode((wWIDTH, wHEIGHT))
+    pygame.display.set_caption("pgnibbles")
     apple = capple()
     snake = csnake()
     snake.direction = K_RIGHT
