@@ -32,6 +32,7 @@ class cscore():
         self.score=0
     def add(self, s):
 	self.score = self.score + s
+pygame.display.set_caption("pgnibbles")
 while (1):
     pygame.init()
     GCLOCK = pygame.time.Clock()
@@ -84,12 +85,16 @@ while (1):
         pygame.draw.circle(GSURF, (255, 0, 0), (apple.data[0][0]*GSIZE+(GSIZE/2),apple.data[0][1]*GSIZE+(GSIZE/2)), GSIZE/2, 2)
         
 	if pygame.font:
-    	    font = pygame.font.Font(None, 36)
-    	    text = font.render(str(score.score), 1, (255, 255, 255))
+    	    font = pygame.font.Font(None, 24)
+    	    text = font.render("Score:"+str(score.score), 1, (255, 255, 255))
 	    textpos = text.get_rect(centerx=GSURF.get_width()/2)
-            GSURF.blit(text, textpos)
-	pygame.display.update()
+            GSURF.blit(text,textpos)
+            text = font.render("pgnibbles",1,(255,255,255))
+	    textpos = text.get_rect(center=(600,465))
+	    GSURF.blit(text,textpos)
+	pygame.display.flip()
         GCLOCK.tick(15)
 	if snake.alive==0:
-	    print "You died your score was ... " + str(score.score)
+	    if (score.score!=0):
+	        print "You died your score was " + str(score.score)
 	    break
