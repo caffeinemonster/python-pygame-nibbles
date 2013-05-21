@@ -1,4 +1,4 @@
-#body / head collision still not working needs looking at.
+#pgnibbles with classes
 import random, pygame, time
 from pygame.locals import *
 wWIDTH = 640
@@ -27,9 +27,6 @@ class capple():
     def add(self,x,y):
 	self.data=[]
 	self.data.append((x,y))
-    def get(self):
-	r = self.data
-	return r
 while (1):
     pygame.init()
     GCLOCK = pygame.time.Clock()
