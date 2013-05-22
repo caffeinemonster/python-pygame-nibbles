@@ -76,7 +76,7 @@ class cparticle():
         self.x = xloc
         self.y = yloc
         self.colour = (random.randint(1, 255), random.randint(1, 255), random.randint(1, 255))
-        self.life = 5
+        #self.life = 5
         self.alive = 1
         self.size = random.randint(1, 5)
 
