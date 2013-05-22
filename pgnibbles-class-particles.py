@@ -144,7 +144,9 @@ while (1):
             if (body == snake.head()):
                 snake.alive = 0
         if snake.data[0][0] == apple.data[0][0] and snake.data[0][1] == apple.data[0][1]:
-            particles.seed((apple.data[0][0] * GSIZE), (apple.data[0][1] * GSIZE), 20, 10, 30)
+            particles.seed((apple.data[0][0] * GSIZE), (apple.data[0][1] * GSIZE), 20, 10, 50)
+            particles.seed(GSURF.get_width() / 2, 10, 30, 15, 100)
+            particles.seed(GSURF.get_width() - 20, 475, 30, 15, 100)
             apple.add(random.randint(0, GWIDTH - 1), random.randint(0, GHEIGHT - 1))
             score.add(1)
         else:
