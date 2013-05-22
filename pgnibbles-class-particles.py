@@ -60,7 +60,6 @@ class cparticle():
 
     def seed(self, xloc, yloc, ispeed, ilife):
         self.colour = (255, 255, 255)
-        #self.size = 2
         self.speed = ispeed
         self.life = random.randint(1, ilife)
         r = random.randint(0, 1)
