@@ -60,7 +60,7 @@ class cparticle():
 
     def seed(self, xloc, yloc, ispeed, ilife):
         self.colour = (255, 255, 255)
-        self.size = 2
+        #self.size = 2
         self.speed = ispeed
         self.life = random.randint(1, ilife)
         r = random.randint(0, 1)
@@ -76,9 +76,8 @@ class cparticle():
         self.x = xloc
         self.y = yloc
         self.colour = (random.randint(1, 255), random.randint(1, 255), random.randint(1, 255))
-        #self.life = 5
         self.alive = 1
-        self.size = random.randint(1, 5)
+        self.size = random.randint(1, 3)
 
     def move(self):
         if self.life > 0:
@@ -91,10 +90,10 @@ class cparticle():
 
 class cparticles():
     def __init__(self):
-        self.particles = [cparticle()]
+        self.particles = []
 
     def seed(self, x, y, speed, life, amount):
-        self.particles = []
+        self.killold()
         for i in range(1, amount):
             part = cparticle()
             part.seed(x, y, speed, life)
@@ -103,6 +102,12 @@ class cparticles():
     def move(self):
         for p in self.particles:
             p.move()
+
+    def killold(self):
+        for p in self.particles:
+            if p.alive != 1:
+                del(p)
+
 while (1):
     pygame.init()
     GCLOCK = pygame.time.Clock()
@@ -156,7 +161,7 @@ while (1):
         for p in particles.particles:
             if p.alive == 1:
                 pygame.draw.circle(GSURF, p.colour, (p.x + (GSIZE / 2), p.y + (GSIZE / 2)), p.size)
-                p.move()
+        particles.move()
         for co in snake.data:
             pygame.draw.circle(GSURF, (0, 255, 0), (co[0]*GSIZE+(GSIZE/2),co[1]*GSIZE+(GSIZE/2)), GSIZE/2, 2)
         pygame.draw.circle(GSURF, (255, 0, 0), (apple.data[0][0]*GSIZE+(GSIZE/2),apple.data[0][1]*GSIZE+(GSIZE/2)), GSIZE/2, 2)
@@ -169,7 +174,7 @@ while (1):
             textpos = text.get_rect(center=(600, 465))
             GSURF.blit(text, textpos)
         pygame.display.flip()
-        GCLOCK.tick(15)
+        GCLOCK.tick(30)
         if snake.alive == 0:
             if (score.score != 0):
                 print(("You died your score was " + str(score.score)))
