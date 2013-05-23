@@ -2,6 +2,7 @@
 import random
 import pygame
 from pygame.locals import *
+
 wWIDTH = 640
 wHEIGHT = 480
 GSIZE = 10
@@ -64,14 +65,8 @@ class cparticle():  # particle class
         self.colour = (random.randint(1, 255), random.randint(1, 255), random.randint(1, 255))
         self.seed(xy, (3, 20), 2, (255, 255, 255), 20)
         self.colour = (random.randint(1, 255), random.randint(1, 255), random.randint(1, 255))
-        #self.speed = ispeed
-        #self.size = isize
-        #self.life = random.randint(1, ilife)
-        #self.colour = (random.randint(1, 255), random.randint(1, 255), random.randint(1, 255))
-        #self.alive = 1
+
     def seed(self, xy, speed, isize, rgbcolour, ilife):
-        #self.colour = (255, 255, 255)
-        #self.speed = ispeed
         self.life = random.randint(1, ilife)
         self.colour = rgbcolour
         self.size = random.randint(1, isize)
@@ -87,7 +82,7 @@ class cparticle():  # particle class
             self.speedy = -random.randint(speed[0], speed[1])
         self.alive = 1
 
-    def move(self):
+    def move(self):  # move the particle
         if self.life > 0:
             self.x = self.x + self.speedx
             self.y = self.y + self.speedy
@@ -104,37 +99,41 @@ class cparticles():  # particle group class
         self.killold()
         for i in range(1, amount):
             part = cparticle()
-            #    def seed(self, xy, speed, isize, rgbcolour, ilife):
+            # seed(self, xy, speed, isize, rgbcolour, ilife) # reference
             part.seedrandom((x, y))
             part.seed((x, y), (3, speed), size, rgbcolour, life)
             self.particles.insert(0, part)
+
     def seedrandom(self, xy, amount):
         self.killold()
         for i in range(1, amount):
             part = cparticle()
-            part.seedrandom((xy[0], xy[1]))
+            part.seedrandom(xy)
             self.particles.insert(0, part)
+
     def move(self):
         for p in self.particles:
             p.move()
 
     def killold(self):
         for p in self.particles:
-            if p.alive != 1:
+            if p.alive <= 0:
                 del(p)
 
 
 class csounds():  # sound effects class
     def __init__(self):
-        #super(csounds, self).__init__()
+        self.enabled = 1  # sfx enabled
         self.sndeat = pygame.mixer.Sound('sndfx/beep.wav')
         self.snddead = pygame.mixer.Sound('sndfx/dead.wav')
 
     def fxdead(self):
-        self.snddead.play()
+        if self.enabled:
+            self.snddead.play()
 
     def fxeat(self):
-        self.sndeat.play()
+        if self.enabled:
+            self.sndeat.play()
 
 
 def terminate():  # quit function
@@ -155,10 +154,11 @@ def main():  # main game loop
     snake.add(sx - 1, sy)
     snake.add(sx, sy)
     score = cscore()
-    particles = cparticles()
+    #particles = cparticles() now declared as global
     apple.add(random.randint(0, GWIDTH - 1), random.randint(0, GHEIGHT - 1))
     while(1):
         for event in pygame.event.get():
+            # detact and process keyboard events
             if event.type == QUIT:
                 r = 0
             elif event.type == KEYDOWN:
@@ -172,11 +172,18 @@ def main():  # main game loop
                     snake.direction = K_DOWN
                 if event.key == K_ESCAPE:
                     r = 0
+
+        # is the snake within the game area
         if snake.data[0][0] == -1 or snake.data[0][0] == GWIDTH or snake.data[0][1] == -1 or snake.data[0][1] == GHEIGHT:
             snake.alive = 0
+        #else:
+        #    particles.seed((snake.data[0][0] * GSIZE), (snake.data[0][1] * GSIZE), 5, 5, 2, (0,255,0), 2)
+
         for body in snake.data[1:]:
             if (body == snake.head()):
                 snake.alive = 0
+
+        # is snake location == apple
         if snake.data[0][0] == apple.data[0][0] and snake.data[0][1] == apple.data[0][1]:
             # seed(self, x, y, speed, life, amount, rgbcolour, size)
             particles.seed((apple.data[0][0] * GSIZE), (apple.data[0][1] * GSIZE), 10, 25, 50, (0,255,0), random.randint(1,5))
@@ -185,11 +192,14 @@ def main():  # main game loop
             particles.seedrandom((GSURF.get_width() - 20, 475), 100)
             apple.add(random.randint(0, GWIDTH - 1), random.randint(0, GHEIGHT - 1))
             particles.seed((apple.data[0][0] * GSIZE), (apple.data[0][1] * GSIZE), 20, 5, 50, (255,0,0), random.randint(1,3))
+            #for i in range(2, 16):
+            pygame.mixer.music.queue('sndmusic/TRACK' + str(random.randint(1,16)) + '.mp3')
             score.add(1)
             sfx.fxeat()
         else:
             snake.remove()
-        if snake.direction == K_UP:
+
+        if snake.direction == K_UP:  # move snake
             snake.add(snake.data[0][0], snake.data[0][1] - 1)
         elif snake.direction == K_DOWN:
             snake.add(snake.data[0][0], snake.data[0][1] + 1)
@@ -197,14 +207,17 @@ def main():  # main game loop
             snake.add(snake.data[0][0] - 1, snake.data[0][1])
         elif snake.direction == K_RIGHT:
             snake.add(snake.data[0][0] + 1, snake.data[0][1])
+
+        # draw game elements
         GSURF.fill((0, 0, 0))
         for p in particles.particles:
             if p.alive == 1:
                 pygame.draw.circle(GSURF, p.colour, (p.x + (GSIZE / 2), p.y + (GSIZE / 2)), p.size)
         particles.move()
-        for co in snake.data:
-            pygame.draw.circle(GSURF, (0, 255, 0), (co[0]*GSIZE+(GSIZE/2),co[1]*GSIZE+(GSIZE/2)), GSIZE/2, 2)
-        pygame.draw.circle(GSURF, (255, 0, 0), (apple.data[0][0]*GSIZE+(GSIZE/2),apple.data[0][1]*GSIZE+(GSIZE/2)), GSIZE/2, 2)
+        if snake.alive:
+            for co in snake.data:
+                pygame.draw.circle(GSURF, (0, 255, 0), (co[0]*GSIZE+(GSIZE/2),co[1]*GSIZE+(GSIZE/2)), GSIZE/2, 2)
+            pygame.draw.circle(GSURF, (255, 0, 0), (apple.data[0][0]*GSIZE+(GSIZE/2),apple.data[0][1]*GSIZE+(GSIZE/2)), GSIZE/2, 2)
         if pygame.font:
             font = pygame.font.Font(None, 24)
             text = font.render("Score : " + str(score.score), 1, (255, 255, 255))
@@ -215,10 +228,13 @@ def main():  # main game loop
             GSURF.blit(text, textpos)
         pygame.display.flip()
         GCLOCK.tick(30)
+        # check to see if snake is alive
         if snake.alive == 0:
-            if (score.score != 0):
+            if score.score > 0:
                 print(("You died your score was " + str(score.score)))
             sfx.fxdead()
+            particles.seedrandom((snake.data[0][0] * GSIZE, snake.data[0][1] * GSIZE), 200)
+            particles.seedrandom((apple.data[0][0] * GSIZE, apple.data[0][1] * GSIZE), 200)
             return r
             break
 
@@ -226,16 +242,21 @@ def main():  # main game loop
             return r
 
 if __name__ == "__main__":
+    global particles
+    particles = cparticles()
     r = 1
     pygame.init()
     GCLOCK = pygame.time.Clock()
-    GSURF = pygame.display.set_mode((wWIDTH, wHEIGHT))
+    GSURF = pygame.display.set_mode((wWIDTH, wHEIGHT))  # main game surface
     pygame.display.set_caption("pgnibbles")
-    pygame.mixer.init(frequency=22050, size=-16, channels=2, buffer=4096)
-    pygame.mixer.music.load('sndmusic/TRACK01.mp3')
-    #pygame.mixer.music.play(-1)
+    #pygame.mixer.init(frequency=22050, size=-16, channels=2, buffer=4096)
+    pygame.mixer.init()
+    pygame.mixer.music.load('sndmusic/TRACK1.mp3')
+    #for i in range(2, 16):
+    #    pygame.mixer.music.queue('sndmusic/TRACK' + str(i) + '.mp3')
+    pygame.mixer.music.play(0)
     pygame.mouse.set_visible(0)
-    pygame.display.toggle_fullscreen()
+    #pygame.display.toggle_fullscreen()
     while r != 0:  # quit if return not equal to 0
         r = main()
     pygame.mouse.set_visible(1)
