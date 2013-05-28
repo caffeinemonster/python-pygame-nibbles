@@ -19,6 +19,8 @@ class csnake():  # snake class
         self.add(sxy[0] - 2, sxy[1])  # add snake body
         self.add(sxy[0] - 1, sxy[1])  # add snake body
         self.add(sxy[0], sxy[1])  # add snake body
+        #self.moveframes = 2
+        #self.frames = self.moveframes
 
     def add(self, x, y):  # add snake part
         self.data.insert(0, (x, y))  # add snake part @xy loc
@@ -138,7 +140,9 @@ class csounds():  # sound effects class
     def toggle_enable(self):
         if self.enabled:
             self.enabled = 0  # disable sfx
+            pygame.mixer.music.pause()  # stop music
         else:
+            pygame.mixer.music.play()  # play music
             self.enabled = 1  # enable sfx
 
     def fxdead(self):  # dead
@@ -162,15 +166,15 @@ def terminate():  # quit function - tidy up
 
 def main():  # main game loop
     r = 1  # set return value = 1  # everthing is ok continue to run
-    sfx = csounds()  # init my sounds module
+
     apple = capple()  # init apple
     sxy = ['0', '0']  # define var for snake init to hold xy vars
     sxy[0] = random.randint(5, GWIDTH - 6)  # generate random snake coords
     sxy[1] = random.randint(5, GHEIGHT - 6)  # generate random snake coords
     snake = csnake(sxy)  # initialise snake with grid coords
     score = cscore()  # init score class
-    #apple.add(random.randint(0, GWIDTH - 1), random.randint(0, GHEIGHT - 1))  # add an apple
-    apple.add(0, 0)
+    apple.add(random.randint(0, GWIDTH - 1), random.randint(0, GHEIGHT - 1))  # add an apple
+    #apple.add(0, 0)
     while(1):  # do for a while (game loop)
         for event in pygame.event.get():  # handle events
             if event.type == QUIT:  # ctrl+c
@@ -239,8 +243,12 @@ def main():  # main game loop
             particles.seed((apple.data[0][0] * GSIZE), (apple.data[0][1] * GSIZE), 20, 5, 50, (255, 0, 0), random.randint(1, 3))  # seed particles
             pygame.mixer.music.queue('sndmusic/TRACK' + str(random.randint(1, 16)) + '.mp3')  # choose another track to play next
             sfx.fxeat()  # play the eat sound effect
+            #snake.frames = 0
         else:
+            #if snake.frames == 0:
             snake.remove()  # remove the last body part
+
+        #if snake.frames == 0:
         if snake.direction == K_UP:  # detect relevant keypress
             snake.add(snake.data[0][0], snake.data[0][1] - 1)  # move the snake
         elif snake.direction == K_DOWN:  # detect relevant keypress
@@ -249,13 +257,29 @@ def main():  # main game loop
             snake.add(snake.data[0][0] - 1, snake.data[0][1])  # move the snake
         elif snake.direction == K_RIGHT:  # detect relevant keypress
             snake.add(snake.data[0][0] + 1, snake.data[0][1])  # move the snake
+        #snake.frames = snake.moveframes
+        #else:
+        #    snake.frames -= 1
+
+        # draw bg
         GSURF.fill((0, 0, 0))  # fill game surface with black
+        font = pygame.font.Font(None, 24)  # set font and size
+        for ix in range(1, GWIDTH):
+            for iy in range(1, GHEIGHT):
+                if random.randint(0, 1) == 1:
+                    text = font.render("0", 1, (0, 64, 0))  # set text and colour
+                else:
+                    text = font.render("1", 1, (0, 127, 0))  # set text and colour
+                textpos = text.get_rect(center=(GSIZE * ix, GSIZE * iy))
+                GSURF.blit(text, textpos)  # render text
 
         #b = pygame.sprite.Sprite() # create sprite
-        #b.image = pygame.image.load("imgs/fireball.png").convert_alpha() # load ball image
+        #b.image = pygame.image.load("imgs/grass.png").convert_alpha() # load ball image
         #b.image.set_colorkey(-1)
-        #b.rect = pygame.Rect(0,0,10,10)
+        #b.rect = pygame.Rect(0,0,640,480)
         #b.image.get_rect() # use image extent value
+        #b.rect.topleft = [0, 0] # put the ball in the top left corner
+        #GSURF.blit(b.image, b.rect)
 
         for p in particles.particles:  # draw particles
             if p.alive == 1:  # if the particle is alive
@@ -265,7 +289,6 @@ def main():  # main game loop
                     #b.rect.topleft = [p.x, p.y] # put the ball in the top left corner
                     #b.rect.inflate(-20,-20)
                     #GSURF.blit(b.image, b.rect)
-
         particles.move()  # move the particles to their next location
         if snake.alive:  # if the snake is alive
             for co in snake.data:  # draw the snake
@@ -293,7 +316,8 @@ def main():  # main game loop
             return r  # return value
 
 if __name__ == "__main__":  # main function call
-    global particles  # declare partical class globally
+    global particles, sfx   # declare global vars
+    print("S = Toggle sound + music")
     particles = cparticles()  # initialise partice array
     r = 1  # set variable for return value
     pygame.init()  # initialise python pygame
@@ -302,8 +326,9 @@ if __name__ == "__main__":  # main function call
     GSURF.convert_alpha()  # used for transparent sprites
     pygame.display.set_caption("pgnibbles")  # set window name
     pygame.mixer.init()  # initialise mixer
+    sfx = csounds()  # init my sounds module
     pygame.mixer.music.load('sndmusic/TRACK' + str(random.randint(1, 16)) + '.mp3')  # queue random track
-    #pygame.mixer.music.play()  # play music
+    pygame.mixer.music.play()  # play music
     pygame.mouse.set_visible(0)  # hide mouse
     while r != 0:  # quit if return not equal to 0 (esc key hit)
         r = main()  # get return value from main loop (1 == OK ... 0 == exit)
