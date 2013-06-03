@@ -19,8 +19,6 @@ class csnake():  # snake class
         self.add(sxy[0] - 2, sxy[1])  # add snake body
         self.add(sxy[0] - 1, sxy[1])  # add snake body
         self.add(sxy[0], sxy[1])  # add snake body
-        #self.moveframes = 2
-        #self.frames = self.moveframes
 
     def add(self, x, y):  # add snake part
         self.data.insert(0, (x, y))  # add snake part @xy loc
@@ -36,6 +34,11 @@ class csnake():  # snake class
     def remove(self):
         self.data.pop()  # remove trailing end of snake
 
+    def eatingself(self):
+        sbody = self.body()
+        for part in sbody:  # for each part in the body of the snake
+            if (part == self.head()):  # if the snakes head is eating the body
+                self.alive = 0  # snake is dead, they're all dead dave everybody's dead.'
 
 class capple():  # apple class
     def __init__(self):
@@ -163,10 +166,8 @@ def terminate():  # quit function - tidy up
     pygame.quit()  # quit pygame
     quit()  # quit python  #
 
-
 def main():  # main game loop
     r = 1  # set return value = 1  # everthing is ok continue to run
-
     apple = capple()  # init apple
     sxy = ['0', '0']  # define var for snake init to hold xy vars
     sxy[0] = random.randint(5, GWIDTH - 6)  # generate random snake coords
@@ -197,10 +198,16 @@ def main():  # main game loop
         #else:
         #    particles.seed((snake.data[0][0] * GSIZE), (snake.data[0][1] * GSIZE), 5, 5, 2, (0,255,0), 2)
         #for body in snake.data[1:]:  # for each part in the body of the snake
-        sbody = snake.body()
-        for body in sbody:  # for each part in the body of the snake
-            if (body == snake.head()):  # if the snakes head is eating the body
-                snake.alive = 0  # snake is dead, they're all dead dave everybody's dead.'
+        #sbody = snake.body()
+        #for body in sbody:  # for each part in the body of the snake
+        #    if (body == snake.head()):  # if the snakes head is eating the body
+        #        snake.alive = 0  # snake is dead, they're all dead dave everybody's dead.'
+
+
+        snake.eatingself() # checks to see if snake is eating itself
+
+        #for food in apple.data:
+
         if snake.data[0][0] == apple.data[0][0] and snake.data[0][1] == apple.data[0][1]:  # is the snake eating ?
             # seed(self, x, y, speed, life, amount, rgbcolour, size)  # for refernce
             particles.seed((apple.data[0][0] * GSIZE), (apple.data[0][1] * GSIZE), 10, 25, 50, (0, 127, 0), random.randint(1, 3))  # seed particles
@@ -210,6 +217,7 @@ def main():  # main game loop
             particles.seedrandom((GSURF.get_width() / 2, 10), 100)  # seed particles
             particles.seedrandom((GSURF.get_width() - 20, 475), 100)  # seed particles
             sadd = 0
+
             if snake.alive == 1:  # if the snake is alive add score
                 if apple.data[0][0] == 0 and apple.data[0][1] == 0:  # apple is in top left corner
                     if sadd == 0:
@@ -239,16 +247,14 @@ def main():  # main game loop
                     if sadd == 0:
                         sadd = 1
                 score.add(sadd)  # add sadd to the score
+
             apple.add(random.randint(0, GWIDTH - 1), random.randint(0, GHEIGHT - 1))  # add a new apple
             particles.seed((apple.data[0][0] * GSIZE), (apple.data[0][1] * GSIZE), 20, 5, 50, (255, 0, 0), random.randint(1, 3))  # seed particles
             pygame.mixer.music.queue('sndmusic/TRACK' + str(random.randint(1, 16)) + '.mp3')  # choose another track to play next
             sfx.fxeat()  # play the eat sound effect
-            #snake.frames = 0
         else:
-            #if snake.frames == 0:
             snake.remove()  # remove the last body part
 
-        #if snake.frames == 0:
         if snake.direction == K_UP:  # detect relevant keypress
             snake.add(snake.data[0][0], snake.data[0][1] - 1)  # move the snake
         elif snake.direction == K_DOWN:  # detect relevant keypress
@@ -257,22 +263,18 @@ def main():  # main game loop
             snake.add(snake.data[0][0] - 1, snake.data[0][1])  # move the snake
         elif snake.direction == K_RIGHT:  # detect relevant keypress
             snake.add(snake.data[0][0] + 1, snake.data[0][1])  # move the snake
-        #snake.frames = snake.moveframes
-        #else:
-        #    snake.frames -= 1
 
-        # draw bg
         GSURF.fill((0, 0, 0))  # fill game surface with black
-        font = pygame.font.Font(None, 24)  # set font and size
-        for ix in range(1, GWIDTH):
-            for iy in range(1, GHEIGHT):
-                if random.randint(0, 1) == 1:
-                    text = font.render("0", 1, (0, 64, 0))  # set text and colour
-                else:
-                    text = font.render("1", 1, (0, 127, 0))  # set text and colour
-                textpos = text.get_rect(center=(GSIZE * ix, GSIZE * iy))
-                GSURF.blit(text, textpos)  # render text
-
+#        font = pygame.font.Font(None, 24)  # set font and size
+#        for ix in range(1, GWIDTH):
+#            for iy in range(1, GHEIGHT):
+#                if random.randint(0, 1) == 1:
+#                    text = font.render("0", 1, (0, 64, 0))  # set text and colour
+#                else:
+#                    text = font.render("1", 1, (0, 127, 0))  # set text and colour
+#                textpos = text.get_rect(center=(GSIZE * ix, GSIZE * iy))
+#                GSURF.blit(text, textpos)  # render text
+# above code removed needs coding moar efficiently
         #b = pygame.sprite.Sprite() # create sprite
         #b.image = pygame.image.load("imgs/grass.png").convert_alpha() # load ball image
         #b.image.set_colorkey(-1)
